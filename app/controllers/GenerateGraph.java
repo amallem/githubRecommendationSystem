@@ -12,8 +12,8 @@ import java.util.LinkedList;
  */
 public class GenerateGraph {
 
-    public static HashMap<String, List<GraphNode>> userGraph;
-    public static HashMap<String, List<GraphNode>> repoGraph;
+    public static HashMap<String, List<GraphNode>> userGraph = new HashMap<>();
+    public static HashMap<String, List<GraphNode>> repoGraph = new HashMap<>();
 
     public static final int PEW = 1;
     public static final int WEW = 2;
@@ -22,8 +22,8 @@ public class GenerateGraph {
         int listsize = data.size();
         for(int i = 1; i <= listsize; i++){
             Recommendation R = data.get(i-1);
-            String rn = R.repo_name;
-            String ro = R.repo_owner;
+            String rn = R.repository_name;
+            String ro = R.repository_owner;
             String user = R.actor;
             String typ = R.type;
             String rid  = rn + " " + ro;
@@ -88,7 +88,7 @@ public class GenerateGraph {
     }
 
     public static void PrintUG(List<Recommendation> data){
-        for(int i=1; i <= 50; i++){
+        for(int i=1; i <= data.size(); i++){
             Recommendation R = data.get(i-1);
             System.out.print(R.actor + "\t");
             System.out.println(userGraph.get(R.actor));
@@ -96,6 +96,9 @@ public class GenerateGraph {
     }
 
     public static void main(String[] args){
+        List<Recommendation> r1 = Recommendation.query.findPagedList(0,10).getList();
+        generate(r1);
+        PrintUG(r1);
         System.out.println("czy");
     }
 }

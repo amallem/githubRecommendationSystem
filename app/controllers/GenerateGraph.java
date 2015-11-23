@@ -6,7 +6,7 @@ import models.Recommendation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
-
+import java.util.Set;
 /**
  * Created by anirudh on 11/13/15.
  */
@@ -26,7 +26,7 @@ public class GenerateGraph {
             String ro = R.repository_owner;
             String user = R.actor;
             String typ = R.type;
-            String rid  = rn + " " + ro;
+            String rid  = rn + "_" + ro;
             double weight;
             switch (typ){
                 case "PushEvent":
@@ -87,18 +87,25 @@ public class GenerateGraph {
 
     }
 
-    public static void PrintUG(List<Recommendation> data){
-        for(int i=1; i <= data.size(); i++){
+    public static void PrintG(List<Recommendation> data){
+        for(int i=1; i <= 1000; i++){
             Recommendation R = data.get(i-1);
-            System.out.print(R.actor + "\t");
-            System.out.println(userGraph.get(R.actor));
+            System.out.print(R.repository_name + "\t");
+            System.out.println(repoGraph.get(R.repository_name + "_" + R.repository_owner));
         }
     }
 
-    public static void main(String[] args){
-        List<Recommendation> r1 = Recommendation.query.findPagedList(0,10).getList();
-        generate(r1);
-        PrintUG(r1);
-        System.out.println("czy");
+    public static void PrintGS(List<Recommendation> data){
+        for(int i=1; i <= data.size(); i++){
+            Recommendation R = data.get(i-1);
+            System.out.print(R.repository_name + "\t");
+            System.out.println(repoGraph.get(R.repository_name + "_" + R.repository_owner).size());
+        }
     }
+
+    public static void Print(String name){
+        System.out.println(repoGraph.get(name));
+    }
+
+
 }

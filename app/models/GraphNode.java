@@ -24,7 +24,10 @@ public class GraphNode {
         edgeWeight = w;
     }
 
-    public boolean equals(GraphNode other){
+    public String getName() { return name; }
+
+    public boolean equals(Object otherObject){
+        GraphNode other = (GraphNode) otherObject;
         return name.equals(other.name);
     }
 

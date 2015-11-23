@@ -13,7 +13,6 @@ import javax.persistence.Table;
 @Table(name = "language")
 public class Language extends Model{
 
-    @Id
     public String repo_name;
 
     public String repo_lang;

@@ -29,7 +29,7 @@ public class ChordUtil extends Controller {
             initialize();
             populateMatrix();
         }
-        return ok(Json.toJson(langMatrix));
+        return ok(visual.render(langMatrix));
     }
 
     private void populateMatrix() {

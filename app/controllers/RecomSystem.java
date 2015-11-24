@@ -121,8 +121,9 @@ public class RecomSystem {
         return 1/sum;
     }
 
-    public static void Print(){
+    public static List<String> Print() {
         System.out.println(S);
+        return S;
     }
 
 

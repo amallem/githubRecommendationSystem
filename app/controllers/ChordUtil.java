@@ -39,7 +39,9 @@ public class ChordUtil extends Controller {
             out = getLangList(i);
             for(int j = 0; j<size; j++){
                 in = getLangList(j);
-                if(langMatrix[j][i] !=0){
+                if (i == j) {
+                    langMatrix[i][i] = out.size();
+                } else if (langMatrix[j][i] != 0) {
                     langMatrix[i][j] = langMatrix[j][i];
                 }
                 else {

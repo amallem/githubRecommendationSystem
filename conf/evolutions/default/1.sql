@@ -4,9 +4,16 @@
 # --- !Ups
 
 create table language (
-  repo_name                 varchar(255) not null,
-  repo_lang                 varchar(255),
-  constraint pk_language primary key (repo_name))
+  repo_name                 varchar(255),
+  repo_lang                 varchar(255))
+;
+
+create table recommendation (
+  repository_name           varchar(255) not null,
+  repository_owner          varchar(255),
+  actor                     varchar(255),
+  type                      varchar(255),
+  constraint pk_recommendation primary key (repository_name))
 ;
 
 
@@ -17,6 +24,8 @@ create table language (
 SET FOREIGN_KEY_CHECKS=0;
 
 drop table language;
+
+drop table recommendation;
 
 SET FOREIGN_KEY_CHECKS=1;
 

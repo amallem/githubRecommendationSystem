@@ -1,19 +1,35 @@
 @(message: Array[Array[Int]])
+@import play.libs.Json;
 <html>
     <head>
         <title> HI </title>
         <script src="http://d3js.org/d3.v3.min.js"></script>
+
+        <meta charset="utf-8">
+        <style>
+
+        body {
+        font: 10px sans-serif ;
+        }
+
+        .chord path {
+        fill-opacity: .67 ;
+        stroke: #000 ;
+        stroke-width: .5px ;
+        }
+
+        </style>
     </head>
     <body>
 
         <script>
                 // From http://mkweb.bcgsc.ca/circos/guide/tables/
-                var matrix = message;
+                var matrix = @Json.toJson(message);
 
                 var chord = d3.layout.chord()
                         .padding(.05)
                         .sortSubgroups(d3.ascending)
-                        .matrix(LangMatrix);
+                        .matrix(matrix);
 
                 var width = 960,
                         height = 500,

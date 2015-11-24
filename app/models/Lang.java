@@ -9,7 +9,16 @@ public enum Lang {
     javascript,
     ruby,
     c,
-    cplusplus;
+    cplusplus,
+    scala,
+    php,
+    clojure,
+    actionscript,
+    haskell,
+    csharp,
+    groovy,
+    coffeescript,
+    perl;
 
     public static Lang getLang(int val){
         for(Lang lang: Lang.values()){

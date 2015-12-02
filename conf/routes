@@ -5,7 +5,8 @@
 # Home page
 GET         /chord               controllers.ChordUtil.index()
 GET         /                    controllers.RecomSystem.index()
-POST        /recos               controllers.RecomSystem.getReco()
+GET         /recos               controllers.RecomSystem.getReco()
+POST        /recos               controllers.RecomSystem.createReco()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file        controllers.Assets.versioned(path="/public", file: Asset)

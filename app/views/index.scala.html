@@ -3,13 +3,47 @@
 
 @main("Welcome to Our Site!") {
 
-    <script type="application/javascript" src="@routes.Assets.versioned("js/index.js")"></script>
+    <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js?ver=1.4.2'></script>
+    <script type="application/javascript">
 
-    <form action="@routes.RecomSystem.getReco()" method="post">
+            $(document).ready(function(){
+                $.get("/recos",function(data){
+                    var innerList = data[0];
+                    var url = "https://github.com/";
+                    var listString;
+                    for(var i=0;i<innerList.length;i++){
+                        var splitStr = innerList[i].split('%');
+                        var finalStr = splitStr[1]+"/"+splitStr[0];
+                        var list = document.createElement("li");
+                        var anchor = document.createElement('a');
+                        anchor.setAttribute("href",url+finalStr);
+                        anchor.innerHTML=finalStr;
+                        list.appendChild(anchor);
+                        document.getElementById("first").appendChild(list);
+                    }
+                    innerList = data[1];
+                    for(var i=0;i<innerList.length;i++){
+                        var finalStr = innerList[i];
+                        var list = document.createElement("li");
+                        var anchor = document.createElement('a');
+                        anchor.setAttribute("href",url+finalStr);
+                        anchor.innerHTML=finalStr;
+                        list.appendChild(anchor);
+                        document.getElementById("second").appendChild(list);
+                    }
+                })
+            })
+
+    </script>
+
+
+    <form action="@routes.RecomSystem.createReco()" method="post">
         <input type="text" name="user" />
         <button>Get Recommendation</button>
     </form>
 
-    <ul id="recos"></ul>
+    <ul id="first"><h2>Repositories</h2></ul>
+
+    <ul id="second"><h2>Users</h2></ul>
 
 }

@@ -26,7 +26,7 @@ public class GenerateGraph {
             String ro = R.repository_owner;
             String user = R.actor;
             String typ = R.type;
-            String rid  = rn + "_" + ro;
+            String rid = rn + "%" + ro;
             double weight;
             switch (typ){
                 case "PushEvent":
@@ -91,7 +91,7 @@ public class GenerateGraph {
         for(int i=1; i <= 1000; i++){
             Recommendation R = data.get(i-1);
             System.out.print(R.repository_name + "\t");
-            System.out.println(repoGraph.get(R.repository_name + "_" + R.repository_owner));
+            System.out.println(repoGraph.get(R.repository_name + "%" + R.repository_owner));
         }
     }
 
@@ -99,7 +99,7 @@ public class GenerateGraph {
         for(int i=1; i <= data.size(); i++){
             Recommendation R = data.get(i-1);
             System.out.print(R.repository_name + "\t");
-            System.out.println(repoGraph.get(R.repository_name + "_" + R.repository_owner).size());
+            System.out.println(repoGraph.get(R.repository_name + "%" + R.repository_owner).size());
         }
     }
 

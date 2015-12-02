@@ -27,6 +27,8 @@ public class RecomSystem extends Controller {
     public static List<String> repolist = new LinkedList<>();
     public static List<String> userlist = new LinkedList<>();
 
+    public static List<List<String>> recomResult = new ArrayList<>();
+
     public Result index() {
         PagedList<Recommendation> recoList;
         for (int i = 0; i <= 3; i++) {
@@ -37,20 +39,23 @@ public class RecomSystem extends Controller {
     }
 
     public Result getReco() {
+        return ok(Json.toJson(recomResult));
+    }
+
+    public Result createReco() {
 
         String subject = Form.form().bindFromRequest().get("user");
-        List<List<String>> result = new ArrayList<>();
         Initial();
         RecomSystem.reInitialize();
         if (GenerateGraph.userGraph.containsKey(subject)) {
             RecomSystem.BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, subject);
-            result.add(RecomSystem.getRepo());
-            result.add(RecomSystem.getUser());
+            recomResult.add(RecomSystem.getRepo());
+            recomResult.add(RecomSystem.getUser());
         } else if (GenerateGraph.repoGraph.containsKey(subject)) {
             RecomSystem.BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, subject);
-            result.add(RecomSystem.getUserForRepo());
+            recomResult.add(RecomSystem.getUserForRepo());
         }
-        return ok(Json.toJson(result));
+        return redirect(routes.RecomSystem.index());
     }
 
     private static void reInitialize() {
@@ -58,6 +63,7 @@ public class RecomSystem extends Controller {
         Q.clear();
         userlist.clear();
         repolist.clear();
+        recomResult.clear();
     }
 
     public static void Initial(){

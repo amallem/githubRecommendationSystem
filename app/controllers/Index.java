@@ -20,10 +20,22 @@ public class Index extends Controller {
             recoList = Recommendation.query.findPagedList(i, 100000);
             GenerateGraph.generate(recoList.getList());
         }
-        GenerateGraph.PrintGS(recoList.getList());
+//        GenerateGraph.PrintGS(recoList.getList());
         RecomSystem.Initial();
-        RecomSystem.BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, "TwistedUmbrella");
-        RecomSystem.Print();
+        String source = "kainbacher";
+        if(GenerateGraph.userGraph.containsKey(source)){
+            RecomSystem.BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, source);
+            RecomSystem.getRepo();
+            RecomSystem.getUser();
+        }
+        else if(GenerateGraph.repoGraph.containsKey(source)){
+            RecomSystem.BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, source);
+            RecomSystem.getUserForRepo();
+        }
+        else System.out.println("No such a name exits.");
+//        RecomSystem.BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, source);
+//        RecomSystem.getRepo();
+//        RecomSystem.getUser();
 //        GenerateGraph.Print("jsDAV_ajaxorg");
         Result res = ok(Json.toJson(RecomSystem.Print()));
         return res;

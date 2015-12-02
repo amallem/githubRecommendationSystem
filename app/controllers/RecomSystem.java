@@ -19,7 +19,9 @@ public class RecomSystem {
     public static List<String> S = new LinkedList<>();
     public static List<String> Q = new LinkedList<>();
     public static final int MAXD = 30;
-    public static final int MAXS = 50;
+    public static final int MAXS = 100;
+    public static List<String> repolist = new LinkedList<>();
+    public static List<String> userlist = new LinkedList<>();
 
 
     public static void Initial(){
@@ -119,6 +121,35 @@ public class RecomSystem {
         }
         Disc.clear();
         return 1/sum;
+    }
+
+    public static void getRepo(){
+        for(String e : S){
+            if(rid.containsKey(e)){
+                repolist.add(e);
+            }
+        }
+        System.out.println(repolist);
+    }
+
+    public static void getUser(){
+        for(String e : S){
+            if(actor.containsKey(e)){
+                userlist.add(e);
+            }
+        }
+        userlist.remove(0);
+        System.out.println(userlist);
+    }
+
+    public static void getUserForRepo(){
+        for(String e : S){
+            if(actor.containsKey(e)){
+                userlist.add(e);
+            }
+        }
+//        userlist.remove(0);
+        System.out.println(userlist);
     }
 
     public static List<String> Print() {

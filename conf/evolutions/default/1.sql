@@ -8,6 +8,12 @@ create table language (
   repo_lang                 varchar(255))
 ;
 
+create table location (
+  repository_owner          varchar(255),
+  repository_language       varchar(255),
+  repository_owner_location varchar(255))
+;
+
 create table recommendation (
   repository_name           varchar(255) not null,
   repository_owner          varchar(255),
@@ -24,6 +30,8 @@ create table recommendation (
 SET FOREIGN_KEY_CHECKS=0;
 
 drop table language;
+
+drop table location;
 
 drop table recommendation;
 

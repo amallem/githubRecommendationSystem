@@ -22,7 +22,7 @@ public class Index extends Controller {
         }
 //        GenerateGraph.PrintGS(recoList.getList());
         RecomSystem.Initial();
-        String source = "kainbacher";
+        String source = "110";
         if(GenerateGraph.userGraph.containsKey(source)){
             RecomSystem.BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, source);
             RecomSystem.getRepo();

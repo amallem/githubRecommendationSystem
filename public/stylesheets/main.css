@@ -28,7 +28,7 @@ body {
 }
 
 #content {
-    left: 400px;
+    left: 300px;
     right: 100px;
     top: 200px;
     height: 1200px;
@@ -118,9 +118,4 @@ p {
     text-align: left;
 }
 
-.chord path {
-    fill-opacity: .67;
-    stroke: #000;
-    stroke-width: .5px;
-}
 

@@ -1,0 +1,33 @@
+@(message: String)
+
+
+@main("Welcome to Our Site!") {
+    <html xmlns="http://www.w3.org/1999/xhtml">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/main.css")">
+
+        <body>
+            <div id="container">
+                <div id="header">
+                    <h1><span class="off">GitHub Visualisation and Recommendation</span></h1>
+                    <div id="links">
+                        <a href="@routes.ChordUtil.index()">Visualisation</a>
+                        <a href="@routes.RecomSystem.index()">Recommendation</a>
+                        <a href="#">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div id="content">
+
+                <ul><li>Our Project aims at visualising the use of programming languages used in software projecrs on GitHub</li><br>
+                <li>We have used the GitHub Timeline dataset of the year 2013.</li><br>
+                  <li>  We chose to portray the use of two programming languages together on GitHub by using the Chord Diagram graphical interface.      </li><br>
+             <li>We made use of the repo_owner and repo_lang fields to analyse the usage of combinations of two languages together and represented it in the form of a chord diagram.</li><br>
+                   <li>  We chose to concentrate on the top 15 languages being used on software projects on GitHub.
+                    </li></ul></div>
+
+        </body>
+
+
+}

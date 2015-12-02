@@ -1,16 +1,20 @@
 package controllers;
 
-import java.util.List;
-import java.util.LinkedList;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
+
+import com.avaje.ebean.PagedList;
 import models.GraphNode;
+import models.Recommendation;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Controller;
+import play.mvc.Result;
+import views.html.index;
 
 /**
  * Created by cheng on 11/22/15.
  */
-public class RecomSystem {
+public class RecomSystem extends Controller {
     public static HashMap<String, DisPair> actor = new HashMap<>();
     public static HashMap<String, DisPair> rid = new HashMap<>();
     public static List<Double> Disc = new LinkedList<>();
@@ -23,6 +27,38 @@ public class RecomSystem {
     public static List<String> repolist = new LinkedList<>();
     public static List<String> userlist = new LinkedList<>();
 
+    public Result index() {
+        PagedList<Recommendation> recoList;
+        for (int i = 0; i <= 3; i++) {
+            recoList = Recommendation.query.findPagedList(i, 100000);
+            GenerateGraph.generate(recoList.getList());
+        }
+        return ok(index.render("Recommendation"));
+    }
+
+    public Result getReco() {
+
+        String subject = Form.form().bindFromRequest().get("user");
+        List<List<String>> result = new ArrayList<>();
+        Initial();
+        RecomSystem.reInitialize();
+        if (GenerateGraph.userGraph.containsKey(subject)) {
+            RecomSystem.BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, subject);
+            result.add(RecomSystem.getRepo());
+            result.add(RecomSystem.getUser());
+        } else if (GenerateGraph.repoGraph.containsKey(subject)) {
+            RecomSystem.BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, subject);
+            result.add(RecomSystem.getUserForRepo());
+        }
+        return ok(Json.toJson(result));
+    }
+
+    private static void reInitialize() {
+        S.clear();
+        Q.clear();
+        userlist.clear();
+        repolist.clear();
+    }
 
     public static void Initial(){
         Set<String> actorname = GenerateGraph.userGraph.keySet();
@@ -74,7 +110,9 @@ public class RecomSystem {
     }
 
     public static void BuildTree(HashMap<String, List<GraphNode>> userGraph, HashMap<String, List<GraphNode>> repoGraph, String s){
+        // if(actor.containsKey(s) || rid.containsKey(s)) {
         Q.add(s);
+        //}
         while(Q.size() > 0 && S.size() <= MAXS ){
             String u = ExtractMin(Q);
             S.add(u);
@@ -123,16 +161,17 @@ public class RecomSystem {
         return 1/sum;
     }
 
-    public static void getRepo(){
+    public static List<String> getRepo() {
         for(String e : S){
             if(rid.containsKey(e)){
                 repolist.add(e);
             }
         }
         System.out.println(repolist);
+        return repolist;
     }
 
-    public static void getUser(){
+    public static List<String> getUser() {
         for(String e : S){
             if(actor.containsKey(e)){
                 userlist.add(e);
@@ -140,9 +179,10 @@ public class RecomSystem {
         }
         userlist.remove(0);
         System.out.println(userlist);
+        return userlist;
     }
 
-    public static void getUserForRepo(){
+    public static List<String> getUserForRepo() {
         for(String e : S){
             if(actor.containsKey(e)){
                 userlist.add(e);
@@ -150,6 +190,7 @@ public class RecomSystem {
         }
 //        userlist.remove(0);
         System.out.println(userlist);
+        return userlist;
     }
 
     public static List<String> Print() {

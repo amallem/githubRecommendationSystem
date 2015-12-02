@@ -17,8 +17,6 @@ public class Language extends Model{
 
     public String repo_lang;
 
-    public static String sample = "abc";
-
     public static Finder<String,Language> find = new Finder<String,Language>(String.class, Language.class );
 
 }

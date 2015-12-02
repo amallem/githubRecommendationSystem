@@ -1,7 +1,15 @@
 @(message: String)
 
-@main("Welcome to Play") {
 
-    @play20.welcome(message, style = "Java")
+@main("Welcome to Our Site!") {
+
+    <script type="application/javascript" src="@routes.Assets.versioned("js/index.js")"></script>
+
+    <form action="@routes.RecomSystem.getReco()" method="post">
+        <input type="text" name="user" />
+        <button>Get Recommendation</button>
+    </form>
+
+    <ul id="recos"></ul>
 
 }

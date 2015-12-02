@@ -19,26 +19,51 @@
         }
 
         </style>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+        crossorigin="anonymous">
+
+            <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+        integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+        crossorigin="anonymous">
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
     </head>
     <body>
-
         <script>
+                var globalLanguageIndexConverter = {
+                    "javascript" : 0,
+                    "ruby" : 1,
+                    "java" : 2,
+                    "php" : 3,
+
+                };
+                var globalFormattedLanguageIndices = {
+                    "JavaScript" : 0,
+                    "Ruby" : 1,
+                    "Java" : 2,
+                    "PHP" : 3,
+
+                };
+
                 // From http://mkweb.bcgsc.ca/circos/guide/tables/
+
                 var matrix = @Json.toJson(message);
 
                 var chord = d3.layout.chord()
                         .padding(.05)
-                        .sortSubgroups(d3.ascending)
+                        .sortSubgroups(d3.descending)
                         .matrix(matrix);
 
-                var width = 960,
-                        height = 500,
+                var width = 1000,
+                        height = 1100,
                         innerRadius = Math.min(width, height) * .41,
                         outerRadius = innerRadius * 1.1;
 
-                var fill = d3.scale.ordinal()
-                        .domain(d3.range(5))
-                        .range(["#000000", "#FFDD89", "#957244", "#F26223","#FFFFF"]);
+                var fill = d3.scale.category10();
 
                 var svg = d3.select("body").append("svg")
                         .attr("width", width)
@@ -46,38 +71,18 @@
                         .append("g")
                         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-                svg.append("g").selectAll("path")
+                // create an arc object.
+                var arc = d3.svg.arc();
+
+
+                var a=svg.append("g").selectAll("path")
                         .data(chord.groups)
                         .enter().append("path")
                         .style("fill", function(d) { return fill(d.index); })
                         .style("stroke", function(d) { return fill(d.index); })
-                        .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
+                        .attr("d", arc.innerRadius(innerRadius).outerRadius(outerRadius))
                         .on("mouseover", fade(.1))
                         .on("mouseout", fade(1));
-
-                var ticks = svg.append("g").selectAll("g")
-                        .data(chord.groups)
-                        .enter().append("g").selectAll("g")
-                        .data(groupTicks)
-                        .enter().append("g")
-                        .attr("transform", function(d) {
-                            return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-                                    + "translate(" + outerRadius + ",0)";
-                        });
-
-                ticks.append("line")
-                        .attr("x1", 1)
-                        .attr("y1", 0)
-                        .attr("x2", 5)
-                        .attr("y2", 0)
-                        .style("stroke", "#000");
-
-                ticks.append("text")
-                        .attr("x", 8)
-                        .attr("dy", ".35em")
-                        .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-20)" : null; })
-                        .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-                        .text(function(d) { return d.label; });
 
                 svg.append("g")
                         .attr("class", "chord")
@@ -86,10 +91,47 @@
                         .enter().append("path")
                         .attr("d", d3.svg.chord().radius(innerRadius))
                         .style("fill", function(d) { return fill(d.target.index); })
-                        .style("opacity", 1);
+                        .style("opacity", 1)
+                        .on("mouseover", function(d) {
+                            d3.select("tooltip")
+                                    .style("visibility", "visible")
+                                    .html(getTooltip(d, totalSum))
+                                    .fade(0.1);
+                        })
+                        .on("mouseout", function(){
+                            d3.select("tooltip").style("visibility", "hidden");
+                            fade(1);
+                        });
+
+
+                // language groups
+                var g = svg.selectAll("g.group")
+                        .data(chord.groups)
+                        .enter().append("svg:g")
+                        .attr("class", "group")
+                        .on("mouseover", fade(.02))
+                        .on("mouseout", fade(.80));
+
+                g.append("svg:path")
+                        .style("stroke", function(d) { return fill(d.index); })
+                        .style("fill", function(d) { return fill(d.index); })
+                        .attr("d", arc);
+
+                g.append("svg:text")
+                        .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
+                        .attr("dy", ".35em")
+                        .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+                        .attr("transform", function(d) {
+                            return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+                                    + "translate(" + (outerRadius + 26) + ")"
+                                    + (d.angle > Math.PI ? "rotate(180)" : "");
+                        })
+                        .text(function(d) {
+                            return getFormattedLanguageString(d.index);
+                        });
 
                 // Returns an array of tick angles and labels, given a group.
-                function groupTicks(d) {
+                /*function groupTicks(d) {
                     var k = (d.endAngle - d.startAngle) / d.value;
                     return d3.range(0, d.value, 1000).map(function(v, i) {
                         return {
@@ -97,7 +139,7 @@
                             label: i % 5 ? null : v / 1000 + "k"
                         };
                     });
-                }
+                 }*/
 
                 // Returns an event handler for fading a given chord group.
                 function fade(opacity) {
@@ -109,6 +151,21 @@
                     };
                 }
 
+                function getLanguageString(index){
+                    var keys =  Object.keys(globalLanguageIndexConverter);
+                    return keys[index];
+                }
+
+                function getFormattedLanguageString(index){
+                    var keys =  Object.keys(globalFormattedLanguageIndices);
+                    return keys[index];
+                }
+
+                function getTooltip(chord, totalSum){
+                    var string = getFormattedLanguageString(chord.source.index) + " - " + getFormattedLanguageString(chord.source.subindex) + "<br />";
+                    string += "Users: " + chord.source.value + "(" + ((chord.source.value / totalSum) * 100 ).toFixed(2) + "%)";
+                    return string;
+                }
         </script>
     </body>
-</html
+</html>

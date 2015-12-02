@@ -165,7 +165,7 @@ public class ChordUtil extends Controller {
                     System.out.println("Done " + outerlang.name());
                     break;
                 case csharp:
-                    for (Language lang : Ebean.find(Language.class).where().ieq("repo_lang", "csharp").findList()) {
+                    for (Language lang : Ebean.find(Language.class).where().ieq("repo_lang", "c#").findList()) {
                         csharp.add(lang.repo_name);
                     }
                     System.out.println("Done " + outerlang.name());

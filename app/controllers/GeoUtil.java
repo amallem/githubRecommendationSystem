@@ -1,9 +1,9 @@
 package controllers;
 
-import com.avaje.ebean.PagedList;
-import models.Geo;
 import models.Location;
-import play.*;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.methods.HttpPost;
+import play.data.Form;
 import play.libs.Json;
 import play.mvc.*;
 
@@ -17,11 +17,22 @@ import java.util.List;
 public class GeoUtil extends Controller {
 
 
-    List<Geo> locationMatrix = new ArrayList<Geo>();
+    List<List<String>> locationMatrix = new ArrayList<>();
 
     public Result index() {
-        populateMatrix("java");
-        return ok(location.render(locationMatrix));
+        return ok(map.render("Hii"));
+    }
+
+    public Result getData() {
+        return ok(Json.toJson(locationMatrix));
+    }
+
+
+    public Result populate() {
+        String subject = Form.form().bindFromRequest().get("lang");
+        locationMatrix.clear();
+        populateMatrix(subject);
+        return redirect(routes.GeoUtil.index());
     }
 
     private void populateMatrix(String lang) {
@@ -30,11 +41,12 @@ public class GeoUtil extends Controller {
         int count;
         for (Location location : locationPagedList) {
             String[] loc = location.repository_owner_location.split(",");
-            if (frequency.get(loc[0]) == null) {
-                frequency.put(loc[0], 1);
+            int len = loc.length;
+            if (frequency.get(loc[len - 1]) == null) {
+                frequency.put(loc[len - 1], 1);
             } else {
-                count = frequency.get(loc[0]);
-                frequency.replace(loc[0], ++count);
+                count = frequency.get(loc[len - 1]);
+                frequency.replace(loc[len - 1], ++count);
             }
         }
 
@@ -43,9 +55,13 @@ public class GeoUtil extends Controller {
         while (set.hasNext()) {
             place = set.next();
             count = frequency.get(place);
-
-            Geo res = new Geo(place, lang, count);
-            locationMatrix.add(res);
+            if (StringUtils.isAlphanumeric(place)) {
+                List<String> res = new ArrayList<>();
+                res.add(place);
+                res.add(lang);
+                res.add(count + "");
+                locationMatrix.add(res);
+            }
         }
     }
 

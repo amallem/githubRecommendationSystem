@@ -1,0 +1,65 @@
+@(messages: String)
+@import play.libs.Json;
+<html>
+    <head>
+        <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js?ver=1.4.2'></script>
+        <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+        <script type='text/javascript'>
+                google.load('visualization', '1', {'packages': ['geochart']});
+                $(document).ready(function(){
+                    $.get("/mapData", function(dataReceived){
+                        if(dataReceived.length != 0){
+                            google.setOnLoadCallback(drawMarkersMap(dataReceived));
+
+                            function drawMarkersMap(dataReceived) {
+                                var data = new google.visualization.DataTable();
+
+                                var length = dataReceived.length;
+                                //document.write("Length is " + length);
+
+                                data.addColumn("string","City");
+                                data.addColumn("string","Lang");
+                                data.addColumn("number","Frequency");
+
+                                for(var i = 0; i<100;i++){
+                                    var innerList = dataReceived[i];
+                                    //  document.write("Value is: "+ innerList[0]);
+                                    data.addRow([innerList[0],innerList[1],parseInt(innerList[2])]);
+
+                                }
+
+                                var options = {
+                                    displayMode: 'markers',
+                                    colorAxis: {colors: ['green', 'blue']}
+                                };
+                                var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
+                                chart.draw(data,options);
+                            };
+                        }
+                    });
+                });
+
+        </script>
+    </head>
+    <body>
+        <form action="@routes.GeoUtil.populate()" method="post">
+            <input list="Languages" name="lang">
+            <datalist id="Languages">
+                <option value="java">
+            <option value="ruby">
+                <option value="scala">
+            <option value="php">
+                <option value="javascript">
+            <option value="c">
+                <option value="c#">
+            <option value="python">
+                <option value="haskell">
+            <option value="coffeescript">
+                <option value="groovy">
+            <option value="clojure">
+            </datalist>
+            <input type="submit">
+        </form>
+        <div id="chart_div" style="width: 900px ; height: 500px ;"></div>
+    </body>
+</html>

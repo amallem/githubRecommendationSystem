@@ -9,5 +9,9 @@ GET         /recos               controllers.RecomSystem.getReco()
 POST        /recos               controllers.RecomSystem.createReco()
 GET         /about               controllers.About.index()
 
+GET         /maps                controllers.GeoUtil.index()
+GET         /mapData             controllers.GeoUtil.getData()
+POST        /mapData             controllers.GeoUtil.populate()
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file        controllers.Assets.versioned(path="/public", file: Asset)

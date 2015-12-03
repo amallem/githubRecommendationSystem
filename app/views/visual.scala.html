@@ -1,22 +1,17 @@
 @(message: Array[Array[Int]])
 @import play.libs.Json;
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title> HI </title>
-
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script src="http://d3js.org/d3.v3.min.js"></script>
+@main("Languages Visualisation!!!") {
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/main.css")">
-</head>
     <body>
 
             <div id="container">
                 <div id="header">
                     <h1><span class="off">GitHub Visualisation and Recommendation</span></h1>
                     <div id="links">
-                        <a href="@routes.RecomSystem.index()">Recommendation</a>
-                        <a href="@routes.About.index()">About</a>
-                        <a href="#">Contact</a>
+                        <a href="@routes.GeoUtil.index()">Geo-Visual</a>
+                        <a href="@routes.RecomSystem.index()">Recommendation Engine</a>
+                        <a href="@routes.About.index()">About Project</a>
                     </div>
                 </div>
             </div>
@@ -58,7 +53,6 @@
                     "Perl" : 14,
                 };
 
-                // From http://mkweb.bcgsc.ca/circos/guide/tables/
 
                 var matrix = @Json.toJson(message);
 
@@ -139,16 +133,6 @@
                             return getFormattedLanguageString(d.index);
                         });
 
-                // Returns an array of tick angles and labels, given a group.
-                /*function groupTicks(d) {
-                    var k = (d.endAngle - d.startAngle) / d.value;
-                    return d3.range(0, d.value, 1000).map(function(v, i) {
-                        return {
-                            angle: v * k + d.startAngle,
-                            label: i % 5 ? null : v / 1000 + "k"
-                        };
-                    });
-                 }*/
 
                 // Returns an event handler for fading a given chord group.
                 function fade(opacity) {
@@ -179,4 +163,4 @@
         </script>
         </div>
     </body>
-</html>
+}

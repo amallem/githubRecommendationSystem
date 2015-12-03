@@ -40,6 +40,19 @@ body {
     overflow: auto;
 }
 
+#mapContent {
+    left: 100px;
+    right: 100px;
+    top: 100px;
+    height: 1200px;
+    position: absolute;
+    width: 1200px;
+    background-repeat: repeat-y;
+    padding-left: 17px;
+    padding-right: 17px;
+    overflow: auto;
+}
+
 #links {
     display: block;
     float: right;

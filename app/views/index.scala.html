@@ -1,11 +1,9 @@
 @(message: String)
 
 
-@main("Welcome to Our Site!") {
-    <html xmlns="http://www.w3.org/1999/xhtml">
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+@main("GitHub Recommendation!") {
 
-        <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/main.css")">
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/main.css")">
     <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js?ver=1.4.2'></script>
     <script type="application/javascript">
 
@@ -39,31 +37,28 @@
 
     </script>
 
-        <body>
-            <div id="container">
-                <div id="header">
-                    <h1><span class="off">GitHub Visualisation and Recommendation</span></h1>
-                    <div id="links">
-                        <a href="@routes.ChordUtil.index()">Visualisation</a>
-                        <a href="@routes.About.index()">About</a>
-                        <a href="#">Contact</a>
-                    </div>
+    <body>
+        <div id="container">
+            <div id="header">
+                <h1><span class="off">GitHub Visualisation and Recommendation</span></h1>
+                <div id="links">
+                    <a href="@routes.ChordUtil.index()">Lang-Visual</a>
+                    <a href="@routes.GeoUtil.index()">Geo-Visual</a>
+                    <a href="@routes.About.index()">About Project</a>
                 </div>
             </div>
-            <div id="content">
-                <form action="@routes.RecomSystem.createReco()" method="post">
-                    <input type="text" name="user" />
-                    <button>Get Recommendation</button>
-                </form>
-                <br>
-                <ul id="first"><h2>Repositories</h2></ul>
-                <br>
-                <ul id="second"><h2>Users</h2></ul>
-
-
-            </div>
-
-        </body>
+        </div>
+        <div id="content">
+            <form action="@routes.RecomSystem.createReco()" method="post">
+                <input type="text" name="user" />
+                <button>Get Recommendation</button>
+            </form>
+            <br>
+            <ul id="first"><h2>Repositories</h2></ul>
+            <br>
+            <ul id="second"><h2>Users</h2></ul>
+        </div>
+    </body>
 
 
 }

@@ -1,7 +1,7 @@
 @(messages: String)
 @import play.libs.Json;
-<html>
-    <head>
+@main("Geo-Visualisation!!!") {
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/main.css")">
         <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js?ver=1.4.2'></script>
         <script type='text/javascript' src='https://www.google.com/jsapi'></script>
         <script type='text/javascript'>
@@ -15,22 +15,30 @@
                                 var data = new google.visualization.DataTable();
 
                                 var length = dataReceived.length;
-                                //document.write("Length is " + length);
 
+                                //Creating data format.
                                 data.addColumn("string","City");
                                 data.addColumn("string","Lang");
                                 data.addColumn("number","Frequency");
 
-                                for(var i = 0; i<100;i++){
+                                // Maintaining the selected language as selection in drop-down menu.
+                                var inList = dataReceived[0];
+                                data.addRow([inList[0],inList[0],parseInt(inList[2])]);
+                                var dropdown = document.getElementById('langList');
+                                dropdown.setAttribute("selected",inList[1]);
+
+                                for(var i = 1; i<length;i++){
                                     var innerList = dataReceived[i];
                                     //  document.write("Value is: "+ innerList[0]);
-                                    data.addRow([innerList[0],innerList[1],parseInt(innerList[2])]);
-
+                                    data.addRow([innerList[0],innerList[0],parseInt(innerList[2])]);
                                 }
+
 
                                 var options = {
                                     displayMode: 'markers',
-                                    colorAxis: {colors: ['green', 'blue']}
+                                    colorAxis: {colors: ['green', 'blue']},
+                                    datalessRegionColor: '#ffd696',
+                                    enableRegionInteractivity: true
                                 };
                                 var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
                                 chart.draw(data,options);
@@ -40,26 +48,39 @@
                 });
 
         </script>
-    </head>
+
     <body>
-        <form action="@routes.GeoUtil.populate()" method="post">
-            <input list="Languages" name="lang">
-            <datalist id="Languages">
-                <option value="java">
-            <option value="ruby">
-                <option value="scala">
-            <option value="php">
-                <option value="javascript">
-            <option value="c">
-                <option value="c#">
-            <option value="python">
-                <option value="haskell">
-            <option value="coffeescript">
-                <option value="groovy">
-            <option value="clojure">
-            </datalist>
-            <input type="submit">
-        </form>
-        <div id="chart_div" style="width: 900px ; height: 500px ;"></div>
+        <div id="container">
+            <div id="header">
+                <h1><span class="off">GitHub Visualisation and Recommendation</span></h1>
+                <div id="links">
+                    <a href="@routes.ChordUtil.index()">Lang-Visual</a>
+                    <a href="@routes.RecomSystem.index()">Recommendation</a>
+                    <a href="@routes.About.index()">About Project</a>
+                </div>
+            </div>
+        </div>
+        <div id="mapContent">
+            <form action="@routes.GeoUtil.populate()" method="post">
+                <input list="Languages" name="lang" id="langList">
+                <datalist id="Languages">
+                    <option value="java">
+                <option value="ruby">
+                    <option value="scala">
+                <option value="php">
+                    <option value="javascript">
+                <option value="c">
+                    <option value="c#">
+                <option value="python">
+                    <option value="haskell">
+                <option value="coffeescript">
+                    <option value="groovy">
+                <option value="clojure">
+                </datalist>
+                <input type="submit">
+            </form>
+            <div id="chart_div" style="width: 1300px ; height: 550px ;"></div>
+        </div>
+
     </body>
-</html>
+}

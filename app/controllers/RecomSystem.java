@@ -46,14 +46,15 @@ public class RecomSystem extends Controller {
 
         String subject = Form.form().bindFromRequest().get("user");
         Initial();
-        RecomSystem.reInitialize();
+        reInitialize();
         if (GenerateGraph.userGraph.containsKey(subject)) {
-            RecomSystem.BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, subject);
-            recomResult.add(RecomSystem.getRepo());
-            recomResult.add(RecomSystem.getUser());
+            BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, subject);
+            recomResult.add(getRepo());
+            recomResult.add(getUser());
         } else if (GenerateGraph.repoGraph.containsKey(subject)) {
-            RecomSystem.BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, subject);
-            recomResult.add(RecomSystem.getUserForRepo());
+            BuildTree(GenerateGraph.userGraph, GenerateGraph.repoGraph, subject);
+            recomResult.add(new ArrayList<>());
+            recomResult.add(getUserForRepo());
         }
         return redirect(routes.RecomSystem.index());
     }
@@ -116,9 +117,7 @@ public class RecomSystem extends Controller {
     }
 
     public static void BuildTree(HashMap<String, List<GraphNode>> userGraph, HashMap<String, List<GraphNode>> repoGraph, String s){
-        // if(actor.containsKey(s) || rid.containsKey(s)) {
         Q.add(s);
-        //}
         while(Q.size() > 0 && S.size() <= MAXS ){
             String u = ExtractMin(Q);
             S.add(u);
@@ -194,7 +193,6 @@ public class RecomSystem extends Controller {
                 userlist.add(e);
             }
         }
-//        userlist.remove(0);
         System.out.println(userlist);
         return userlist;
     }
@@ -206,11 +204,6 @@ public class RecomSystem extends Controller {
 
 
 }
-
-
-
-
-
 
 class DisPair{
     private double d;
